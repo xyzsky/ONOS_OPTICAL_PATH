@@ -14,8 +14,4 @@
  * limitations under the License.
  */
 
-package com.xyz.path.optical.intf;
-
-public interface OpticalPathService {
-    String setOpticalPath(String ingressDeviceString , String egressDeviceString );
-}
+package com.xyz.path.optical.impl.compiler;

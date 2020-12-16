@@ -16,12 +16,17 @@
 
 package com.xyz.path.optical.rest;
 
-import com.esotericsoftware.kryo.io.Input;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.xyz.path.optical.impl.OpticalPathManager;
+import com.xyz.path.optical.impl.XyzPathManager;
+import com.xyz.path.optical.intf.OpticalPathService;
 import com.xyz.path.optical.intf.XyzRoutingService;
-import org.onosproject.net.DeviceId;
 
+import org.onosproject.net.ConnectPoint;
+import org.onosproject.net.DeviceId;
+import org.onosproject.net.ElementId;
 import org.onosproject.net.device.DeviceService;
 import org.onosproject.net.link.LinkService;
 import org.onosproject.net.statistic.PortStatisticsService;
@@ -37,16 +42,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
+import static org.onlab.util.Tools.readTreeFromStream;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("optical")
 public class XyzRestResource extends AbstractWebResource {
 
     private Logger logger = getLogger(XyzRestResource.class);
-    private XyzRoutingService xyzRoutingService = get(XyzRoutingService.class);
+    private OpticalPathManager opticalPathservice = get(OpticalPathManager.class);
+
     private LinkService linkService = get(LinkService.class);
     private PortStatisticsService portStatisticsService = get(PortStatisticsService.class);
     private DeviceService deviceService = get(DeviceService.class);
@@ -72,7 +80,8 @@ public class XyzRestResource extends AbstractWebResource {
         logger.info("post begin");
         ObjectNode root = mapper().createObjectNode();
 
-        //String intent = xyzRoutingService.addPath(ingressDeviceString,egressDeviceString);
+//        ElementId src =
+//        String intent = xyzRoutingService.getLoadBalancePaths(ingressDeviceString,egressDeviceString);
 //        root.put("intent", intent);
         return ok(root).build();
     }
@@ -88,9 +97,24 @@ public class XyzRestResource extends AbstractWebResource {
     @Produces(MediaType.APPLICATION_JSON)
     @POST
     public Response setOpticalPath(InputStream stream) {
-        ObjectNode root = mapper().createObjectNode();
-        root.put("path",1);
-        return ok(root).build();
+        try {
+            ObjectNode root = readTreeFromStream(mapper(),stream);
+            ObjectNode ingressPoint = (ObjectNode) root.get("ingressPoint");
+            JsonNode srcc = ingressPoint.get("device");
+            JsonNode ingress = root.get("ingressPoint").get("device");
+            JsonNode egress = root.get("egressPoint").get("device");
+
+            //DeviceId ingresss = codec(DeviceId.class).decode((ObjectNode) ingress, this);
+
+            DeviceId src = DeviceId.deviceId(ingress.asText());
+            String intent = opticalPathservice.setOpticalPath(ingress.asText(),egress.asText());
+
+            //ObjectNode root = mapper().createObjectNode();
+            root.put("path",1);
+            return ok(root).build();
+        }catch (IOException ioe){
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -113,4 +137,5 @@ public class XyzRestResource extends AbstractWebResource {
         root.put("result",success);
         return ok(root).build();
     }
+
 }

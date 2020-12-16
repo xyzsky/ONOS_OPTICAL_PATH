@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package com.xyz.path.optical.intf;
+package com.xyz.path.optical.impl.compiler;
 
-public interface OpticalPathService {
-    String setOpticalPath(String ingressDeviceString , String egressDeviceString );
+import org.onosproject.net.intent.Intent;
+import org.onosproject.net.intent.IntentCompiler;
+import org.onosproject.net.intent.PathIntent;
+
+import java.util.List;
+
+public class OpticalPathCompiler implements IntentCompiler<PathIntent> {
+
+    @Override
+    public List<Intent> compile(PathIntent intent, List<Intent> installable) {
+        return null;
+    }
 }

@@ -16,6 +16,7 @@
 
 package com.xyz.path.optical.rest;
 
+import com.xyz.path.optical.intf.OpticalPathService;
 import org.onlab.rest.AbstractWebApplication;
 
 import java.util.Set;
