@@ -1,0 +1,24 @@
+COMPILE_DEPS = CORE_DEPS + JACKSON + REST + [
+    "//core/common:onos-core-common",
+]
+
+osgi_jar_with_tests(
+    api_description = "Xyz Radio Station REST API v1.0, for Load-Balance Routing",
+    api_package = "com.xyz.path.optical",
+    api_title = "Xyz Radio Station REST API v1.0",
+    api_version = "/onos/v1/xyz",
+    web_context = "/onos/xyz",
+    deps = COMPILE_DEPS,
+)
+
+REQUIRE_APPS = [
+    "org.onosproject.proxyarp",
+]
+
+onos_app(
+    category = "Traffic Steering",
+    description = "Xyz Load-Balance Reactive Forward",
+    required_apps = REQUIRE_APPS,
+    title = "Xyz Load-Balance Reactive Forward",
+    url = "https://www.maojianwei.com",
+)

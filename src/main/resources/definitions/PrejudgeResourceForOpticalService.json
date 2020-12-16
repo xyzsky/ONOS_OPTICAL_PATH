@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "title": "prejudgeResource",
+  "required": [
+    "sourceNodeId",
+    "destNodeId"
+  ],
+  "properties": {
+    "sourceNodeId": {
+      "type": "string",
+      "example": "of:0000ffffffffff01"
+    },
+    "destNodeId": {
+      "type": "string",
+      "example": "10"
+    },
+    "sourceNodePort": {
+      "type": "string",
+      "example": "of:0000ffffffffff02"
+    },
+    "destNodePort": {
+      "type": "string",
+      "example": "20"
+    },
+    "delay": {
+      "type": "float",
+      "example": 0
+    },
+    "bandwidth": {
+      "type": "float",
+      "example": 0
+    }
+  }
+}
